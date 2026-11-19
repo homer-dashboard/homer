@@ -100,6 +100,10 @@ export default {
 
     mapRemoteMessage: function (message) {
       let mapped = {};
+
+      // If the msg is an array, take the frist value
+      if (Array.isArray(message)) message = message[0];
+      
       // map property from message into mapped according to mapping config (only if field has a value):
       for (const prop in this.item.mapping)
         if (message[this.item.mapping[prop]])
