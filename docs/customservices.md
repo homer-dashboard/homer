@@ -20,6 +20,7 @@ Available services are located in `src/components/`:
 - [Docuseal](#docuseal)
 - [Docker Socket Proxy](#docker-socket-proxy)
 - [Emby / Jellyfin](#emby--jellyfin)
+- [EVCC](#evcc)
 - [FreshRSS](#freshrss)
 - [Gatus](#gatus)
 - [Gitea / Forgejo](#gitea--forgejo)
@@ -213,6 +214,21 @@ The `libraryType` configuration let you choose which stats to show.
 ```
 
 Jellyfin 12 disables legacy authorization on upgrade, which stops the `X-Emby-Token` header this card sends by default from being accepted. The card detects the server version and sends `Authorization: MediaBrowser Token="..."` instead, which works on every Jellyfin release. Emby is unaffected and keeps the default. Set `legacyAuth` to override that detection on a server configured to accept only one of them.
+
+## EVCC
+
+Displays power data from [EVCC](https://evcc.io/): solar, home and grid power (negative while exporting), the home battery's charge and power (negative while charging), and the grid's CO₂ intensity when EVCC has CO₂ data.
+
+```yaml
+- name: "EVCC"
+  type: "Evcc"
+  logo: "assets/tools/sample.png"
+  url: https://my-service.url
+  hide: [] # Optional: hides "pv", "home", "grid", "soc", "battery", "co2", "serverError".
+  kilowattConversionThreshold: 500 # Optional (default: 500), minimum wattage at which power is displayed in kW instead of W.
+```
+
+The card shows as many values as fit, in that order, so use `hide` to pick the ones you want. EVCC accepts requests from any origin, but not with credentials or custom headers: leave `useCredentials` off for this card (set it to `false` if `proxy.useCredentials` is on), and don't set `headers` on it or in `proxy`.
 
 ## FreshRSS
 
