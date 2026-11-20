@@ -43,6 +43,25 @@ To resolve this, you can either:
 - Modify the target server configuration so that the response of the server included following header- `Access-Control-Allow-Origin: *` (<https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS#simple_requests>). It might be an option in the targeted service, otherwise depending on how the service is hosted, the proxy or web server can seamlessly add it.
 - **Use a proxy** to add the necessary CORS headers (lot of options, some of them described [here](https://enable-cors.org/server.html). Also check [`CORSair`](https://github.com/homer-dashboard/corsair), a light and simple solution)
 
+## A smart card's HTTP requests are blocked when Homer uses HTTPS
+
+If the browser console reports [mixed content](https://www.w3.org/TR/mixed-content/),
+check the request URL in the Network tab. For example, the browser blocks API
+requests from `https://homer.example.com` to `http://my-service.example.com`.
+
+If the service already serves its API over HTTPS, use that URL as the card's
+`endpoint`. For an HTTP-only service, configure your HTTPS reverse proxy to
+forward a path on Homer's origin to the service's HTTP API. For example, if the
+proxy forwards `https://homer.example.com/my-service/` to the service, set:
+
+```yaml
+endpoint: /my-service
+```
+
+Keep `url` set to the page you want to open when you click the card. See the
+[smart card configuration](customservices.md#common-options) for more on these
+options.
+
 ## I am using an authentication proxy and homer says I am offline
 
 This should be a configuration issue.
