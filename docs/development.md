@@ -55,6 +55,7 @@ Any service consuming an API must use the [`service`](https://github.com/homer-d
 - **Errors**: wrap the requests in `this.load(...)`, which logs any failure and sets `this.serverError`. Declare `serverError: null` in `data`; `null` means "not loaded yet".
 - **Card helpers**: `reachabilityStatus()` and `connectionBadge()` build the chip and error pill from `serverError`; `requireConfig("apikey")` and `isValueShown(key)` complete the mixin.
 - **Formatting**: `capCount(value, max)`, `displayVersion(version)`, `displayRate(bytesPerSecond)`, `displaySize(bytes)` and `displayDuration(seconds)` live in [`@/utils/format.js`](https://github.com/homer-dashboard/homer/blob/main/src/utils/format.js), not on the mixin, which holds no logic about what a card displays. They are pure functions, so import them where you need them. A template cannot see an import, so a card calling one from its markup exposes it through `methods` (see `OctoPrint` or `Traefik`).
+- **Remote HTML**: never render HTML returned by an API with a bare `v-html`. Pass it through `sanitizeHtml(html)` from [`@/utils/sanitizeHtml.js`](https://github.com/homer-dashboard/homer/blob/main/src/utils/sanitizeHtml.js) first, which returns the clean `html` and the names of what it `removed`.
 
 > [!NOTE]
 > Some services cannot use `this.fetch`: `OpenWeather` talks to a third-party public API and `Rtorrent` to an XML-RPC host. `Rtorrent` still uses the mixin for everything else, so follow it if you need a custom transport. `OpenWeather` uses none of it and is not a model for anything.
