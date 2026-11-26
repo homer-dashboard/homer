@@ -207,6 +207,10 @@
         "headers": {
           "$ref": "#/definitions/Headers",
           "description": "Send custom headers when fetching the message url."
+        },
+        "sanitize": {
+          "type": "boolean",
+          "description": "Sanitize the HTML returned by the message url (default: true). Setting it to false is discouraged: whoever controls the endpoint can then run code on your dashboard."
         }
       },
       "title": "Messagebox"

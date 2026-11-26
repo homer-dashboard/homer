@@ -98,7 +98,7 @@ colors:
 
 # Optional message
 message:
-  # url: "https://<my-api-endpoint>" # Can fetch information from an endpoint to override value below.
+  # url: "https://<my-api-endpoint>" # Can fetch information from an endpoint to override value below. HTML it returns is sanitized.
   # mapping: # allows to map fields from the remote format to the one expected by Homer
   #   title: 'id' # use value from field 'id' as title
   #   content: 'value' # value from field 'value' as content
@@ -106,6 +106,7 @@ message:
   # useCredentials: true # Optional: send cookies & authorization headers with the request. The `proxy` settings don't apply to the message.
   # headers: # Optional: send custom headers with the request.
   #   Authorization: "Bearer <token>"
+  # sanitize: false # Discouraged: renders the returned HTML as is, so whoever controls the endpoint can run code on your dashboard.
   #
   # Real example using chucknorris.io for showing Chuck Norris facts as messages:
   # url: https://api.chucknorris.io/jokes/random
