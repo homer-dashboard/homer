@@ -1,13 +1,10 @@
 <template>
-  <Generic
-    :item="item"
-    :subtitle="api && `happily storing ${api.count} documents`"
-    :badges="badges"
-  />
+  <Generic :item="item" :subtitle="documents" :badges="badges" />
 </template>
 
 <script>
 import service from "@/mixins/service.js";
+import { displayCount } from "@/utils/format.js";
 
 export default {
   name: "Paperless",
@@ -20,11 +17,15 @@ export default {
     badges() {
       return [this.connectionBadge()];
     },
+    documents() {
+      if (this.serverError || !this.api) {
+        return null;
+      }
+      return `happily storing ${displayCount(this.api.count, "document")}`;
+    },
   },
   methods: {
     fetchData: async function () {
-      if (this.item.subtitle != null) return;
-
       if (!this.requireConfig("apikey")) {
         return;
       }

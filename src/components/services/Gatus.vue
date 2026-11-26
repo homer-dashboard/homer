@@ -1,10 +1,11 @@
 <template>
   <Generic :item="item" :status="status">
-    <template #subtitle>
+    <template v-if="serverError === false" #subtitle>
       <i class="fa-solid fa-signal"></i> {{ up }}/{{ total }}
       <template v-if="avgRespTime > 0">
         <span class="mx-1"> | </span>
-        <i class="fa-solid fa-stopwatch"></i> {{ avgRespTime }} ms avg.
+        <i class="fa-solid fa-stopwatch"></i>
+        {{ displayLatency(avgRespTime) }} avg.
       </template>
     </template>
   </Generic>
@@ -12,6 +13,7 @@
 
 <script>
 import service from "@/mixins/service.js";
+import { displayLatency, displayPercent } from "@/utils/format.js";
 
 export default {
   name: "Gatus",
@@ -31,16 +33,19 @@ export default {
         return this.reachabilityStatus();
       }
       return (
-        this.state && { state: this.state, label: `${this.percentageGood}%` }
+        this.state && {
+          state: this.state,
+          label: displayPercent(this.percentageGood, 0),
+        }
       );
     },
   },
   methods: {
+    displayLatency,
     fetchData: function () {
       return this.load(
         this.fetch("/api/v1/endpoints/statuses", {
           method: "GET",
-          cache: "no-cache",
         }).then((response) => {
           // Apply filtering by groups, if defined
           if (this.item.groups) {
@@ -82,7 +87,7 @@ export default {
           this.down = this.total - this.up;
 
           // Calculate overall average response time
-          this.avgRespTime = (totalrestime / totalresults).toFixed(2);
+          this.avgRespTime = totalrestime / totalresults;
 
           // Update representations
           if (this.up == 0 || this.total == 0) {

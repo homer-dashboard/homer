@@ -4,6 +4,7 @@
 
 <script>
 import service from "@/mixins/service.js";
+import { displayLatency } from "@/utils/format.js";
 
 export default {
   name: "Ping",
@@ -14,20 +15,17 @@ export default {
   }),
   computed: {
     rttLabel: function () {
-      if (this.serverError === null) {
-        return null;
-      }
-      return !this.serverError ? `${this.rtt}ms` : "unavailable";
+      return this.serverError === false ? displayLatency(this.rtt) : null;
     },
   },
   methods: {
-    fetchData: async function () {
+    fetchData: function () {
       const method =
         typeof this.item.method === "string"
           ? this.item.method.toUpperCase()
           : "HEAD";
 
-      if (!["GET", "HEAD", "OPTION"].includes(method)) {
+      if (!["GET", "HEAD", "OPTIONS"].includes(method)) {
         console.error(`Ping: ${method} is not a supported HTTP method`);
         return;
       }
@@ -36,20 +34,20 @@ export default {
       const timeout = parseInt(this.item.timeout, 10) || 2000;
       const params = {
         method,
-        cache: "no-cache",
         signal: AbortSignal.timeout(timeout),
       };
 
-      this.fetch("/", params, false)
-        .then(() => {
-          this.serverError = false;
-          const endTime = performance.now();
-          this.rtt = Math.round(endTime - startTime);
-        })
-        .catch(() => {
-          this.serverError = true;
-          this.rtt = null; // Reset rtt on failure
-        });
+      return this.load(
+        this.fetch("/", params, false).then(
+          () => {
+            this.rtt = performance.now() - startTime;
+          },
+          (e) => {
+            this.rtt = null;
+            throw e;
+          },
+        ),
+      );
     },
   },
 };
