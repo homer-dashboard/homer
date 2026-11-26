@@ -31,7 +31,7 @@ export default {
       }
 
       return this.load(
-        this.fetch("/api/documents/", {
+        this.fetch("/api/documents/?page_size=1", {
           headers: {
             Authorization: "Token " + this.item.apikey,
           },

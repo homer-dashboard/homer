@@ -27,6 +27,7 @@ export default {
 
       if (!["GET", "HEAD", "OPTIONS"].includes(method)) {
         console.error(`Ping: ${method} is not a supported HTTP method`);
+        this.serverError = true;
         return;
       }
 

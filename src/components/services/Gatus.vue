@@ -62,7 +62,7 @@ export default {
           let totalresults = 0;
 
           response.forEach((job) => {
-            if (job.results[job.results.length - 1].success === true) {
+            if (job.results.at(-1)?.success === true) {
               this.up++;
             }
 
@@ -71,8 +71,10 @@ export default {
               let totalduration = 0;
               let rescounter = 0;
               job.results.forEach((res) => {
-                totalduration += parseInt(res.duration, 10) / 1000000;
-                rescounter++;
+                if (res.duration > 0) {
+                  totalduration += parseInt(res.duration, 10) / 1000000;
+                  rescounter++;
+                }
               });
 
               totalrestime += totalduration;
