@@ -55,7 +55,7 @@ The mixin still accepts `checkInterval`, `downloadInterval`, `rateInterval`, `to
 ### Configuration & Routing
 
 - **Multi-page Support**: Hash-based routing without Vue Router
-- **Dynamic Config Loading**: External URLs supported via `config.remote_config`
+- **Dynamic Config Loading**: External URLs supported via `externalConfig`
 - **Theme System**: CSS layers architecture with three built-in themes in `src/assets/themes/`
 - **Asset Management**: Static files served from `/assets/` with runtime configuration merging
 

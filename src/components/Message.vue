@@ -15,6 +15,8 @@
 </template>
 
 <script>
+import fetchOptions from "@/utils/fetchOptions.js";
+
 export default {
   name: "Message",
   props: {
@@ -82,9 +84,13 @@ export default {
     // Never rejects, so a failing endpoint cannot break the refresh loop.
     downloadMessage: async function (url) {
       try {
-        const response = await fetch(url, {
-          headers: { Accept: "application/json" },
-        });
+        const response = await fetch(
+          url,
+          fetchOptions({
+            item: this.item,
+            init: { headers: { Accept: "application/json" } },
+          }),
+        );
 
         if (!response.ok) {
           throw new Error(`${response.status} error`);
