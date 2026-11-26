@@ -5,6 +5,7 @@
     :class="[
       `theme-${config.theme}`,
       `page-${currentPage}`,
+      `fa-width-${config.defaults.iconWidth}`,
       isDark ? 'dark' : 'light',
       !config.footer ? 'no-footer' : '',
     ]"
@@ -206,7 +207,7 @@ export default {
       }
     },
     getConfig: function (path = "assets/config.yml") {
-      return fetch(path).then((response) => {
+      return fetch(path, { cache: "no-cache" }).then((response) => {
         if (response.status == 404 || response.redirected) {
           this.configNotFound = true;
           return {};

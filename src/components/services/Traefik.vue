@@ -1,93 +1,94 @@
 <template>
-  <Generic :item="item">
-    <template #content>
-      <p class="title is-4">{{ item.name }}</p>
-      <p class="subtitle is-6">
-        <template v-if="item.subtitle">
-          {{ item.subtitle }}
-        </template>
-        <template v-else-if="versionstring">
-          Version {{ versionstring }}
-        </template>
-      </p>
-    </template>
-    <template #indicator>
-      <div v-if="status" class="status" :class="status">
-        {{ status }}
-      </div>
-    </template>
-  </Generic>
+  <Generic
+    :item="item"
+    :subtitle="displayVersion(versionstring)"
+    :status="reachabilityStatus()"
+    :badges="badges"
+  />
 </template>
 
 <script>
 import service from "@/mixins/service.js";
+import { displayVersion } from "@/utils/format.js";
+
+// Protocol sections nest categories; certificates is a flat {total, warnings, errors}.
+const PROTOCOLS = ["http", "tcp", "udp"];
+const CATEGORIES = ["routers", "services", "middlewares"];
+
+// Indicator badges; key doubles as the hide key.
+const COUNTERS = [
+  { key: "routers", label: "Routers", tone: "success", cap: false },
+  { key: "services", label: "Services", tone: "info", cap: false },
+  { key: "middlewares", label: "Middlewares", tone: "accent", cap: false },
+  { key: "certificates", label: "Certificates", tone: "success", cap: false },
+  { key: "warnings", label: "Warnings", tone: "warning" },
+  { key: "errors", label: "Errors", tone: "danger" },
+];
 
 export default {
   name: "Traefik",
   mixins: [service],
-  props: {
-    item: Object,
-  },
   data: () => ({
-    fetchOk: null,
+    overview: null,
+    serverError: null,
     versionstring: null,
   }),
   computed: {
-    status: function () {
-      return this.fetchOk ? "online" : "offline";
+    counts() {
+      if (!this.overview) {
+        return {};
+      }
+
+      const totals = Object.fromEntries(COUNTERS.map(({ key }) => [key, 0]));
+      const entries = [
+        ...PROTOCOLS.flatMap((protocol) =>
+          CATEGORIES.map((category) => [
+            category,
+            this.overview[protocol]?.[category],
+          ]),
+        ),
+        ["certificates", this.overview.certificates],
+      ];
+
+      for (const [key, entry] of entries) {
+        totals[key] += entry?.total || 0;
+        totals.warnings += entry?.warnings || 0;
+        totals.errors += entry?.errors || 0;
+      }
+      return totals;
+    },
+    badges() {
+      return COUNTERS.map((counter) => ({
+        ...counter,
+        value: this.counts[counter.key],
+      }));
     },
   },
-  created() {
-    this.fetchStatus();
-  },
   methods: {
-    fetchStatus: async function () {
+    displayVersion,
+    fetchData: function () {
       let headers = {};
       if (this.item.basic_auth) {
         const encodedCredentials = btoa(this.item.basic_auth);
         headers["Authorization"] = `Basic ${encodedCredentials}`;
       }
-      this.fetch("/api/version", { headers })
-        .then((response) => {
-          this.fetchOk = true;
+
+      const requests = [
+        this.fetch("/api/version", { headers }).then((response) => {
           this.versionstring = response.Version;
-        })
-        .catch((e) => {
-          this.fetchOk = false;
-          console.log(e);
-        });
+        }),
+      ];
+
+      if (COUNTERS.some(({ key }) => this.isValueShown(key))) {
+        requests.push(
+          this.fetch("/api/overview", { headers }).then((overview) => {
+            this.overview = overview;
+          }),
+        );
+      }
+
+      return this.load(...requests);
     },
   },
 };
 </script>
-
-<style scoped lang="scss">
-.status {
-  font-size: 0.8rem;
-  color: var(--text-title);
-  white-space: nowrap;
-  margin-left: 0.25rem;
-
-  &.online:before {
-    background-color: #94e185;
-    border-color: #78d965;
-    box-shadow: 0 0 5px 1px #94e185;
-  }
-
-  &.offline:before {
-    background-color: #c9404d;
-    border-color: #c42c3b;
-    box-shadow: 0 0 5px 1px #c9404d;
-  }
-
-  &:before {
-    content: " ";
-    display: inline-block;
-    width: 7px;
-    height: 7px;
-    margin-right: 10px;
-    border: 1px solid #000;
-    border-radius: 7px;
-  }
-}
-</style>

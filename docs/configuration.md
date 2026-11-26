@@ -29,7 +29,7 @@ header: true # Set to false to hide the header
 # Optional: Different hotkey for search, defaults to "/"
 # hotkey:
 #   search: "Shift"
-footer: '<p>Created with <span class="has-text-danger">❤️</span> with <a href="https://bulma.io/">bulma</a>, <a href="https://vuejs.org/">vuejs</a> & <a href="https://fontawesome.com/">font awesome</a> // Fork me on <a href="https://github.com/bastienwirtz/homer"><i class="fab fa-github-alt"></i></a></p>' # set false if you want to hide it.
+footer: '<p>Created with <span class="has-text-danger">❤️</span> with <a href="https://bulma.io/">bulma</a>, <a href="https://vuejs.org/">vuejs</a> & <a href="https://fontawesome.com/">font awesome</a> // Fork me on <a href="https://github.com/homer-dashboard/homer"><i class="fab fa-github-alt"></i></a></p>' # set false if you want to hide it.
 
 columns: "3" # "auto" or number (must be a factor of 12: 1, 2, 3, 4, 6, 12)
 connectivityCheck: true # whether you want to display a message when the apps are not accessible anymore (VPN disconnected for example).
@@ -47,6 +47,7 @@ proxy:
 defaults:
   layout: columns # Either 'columns', or 'list'
   colorTheme: auto # One of 'auto', 'light', or 'dark'
+  iconWidth: auto # Either 'auto', or 'fixed'
 
 # Optional theming
 theme: default # 'default' or one of the themes available in 'src/assets/themes'.
@@ -114,11 +115,11 @@ message:
 links:
   - name: "Link 1"
     icon: "fab fa-github"
-    url: "https://github.com/bastienwirtz/homer"
+    url: "https://github.com/homer-dashboard/homer"
     target: "_blank" # optional html tag target attribute
   - name: "link 2"
     icon: "fas fa-book"
-    url: "https://github.com/bastienwirtz/homer"
+    url: "https://github.com/homer-dashboard/homer"
   # this will link to a second homer page that will load config from page2.yml and keep default config values as in config.yml file
   # see url field and assets/page.yml used in this example:
   - name: "Second Page"
@@ -140,13 +141,20 @@ services:
     items:
       - name: "Awesome app"
         logo: "assets/tools/sample.png"
-        # Alternatively a fa icon can be provided:
+        # Alternatively a fa icon can be provided. Note that icon take precedence if both icon and logo are set.
         # icon: "fab fa-jenkins"
         subtitle: "Bookmark example"
         tag: "app"
         keywords: "self hosted reddit" # optional keyword used for searching purpose
         url: "https://www.reddit.com/r/selfhosted/"
         target: "_blank" # optional html tag target attribute
+        # Optional shortcut links, shown as small pills along the bottom of the card.
+        quick:
+          - name: "Wiki"
+            url: "https://www.reddit.com/r/selfhosted/wiki/"
+            icon: "fas fa-book" # optional
+            target: "_blank" # optional
+            color: "#4285f4" # optional, overrides the default pill background
       - name: "Another one"
         logo: "assets/tools/sample2.png"
         subtitle: "Another application"
@@ -201,6 +209,10 @@ Homer uses [bulma CSS](https://bulma.io/), which provides a [modifiers syntax](h
 
 You can read the [bulma modifiers page](https://bulma.io/documentation/start/syntax/) for other options regarding size, style, or state.
 
+### Icon width
+
+Font Awesome 7 gives every icon the same width, which is what the `fa-fw` class used to do on its own. Homer keeps the previous behaviour by default, so each icon takes up only the space it needs. Set `iconWidth: fixed` under the `defaults` key to opt into the uniform width, which lines up icons in a column when you list several services with different icons.
+
 ## Theming & customization
 
 See `colors` settings in the configuration example above.
@@ -216,4 +228,4 @@ The `/assets/manifest.json` can also be edited to change the app (pwa) name, des
 
 ## PWA Icons
 
-See icons documentation [here](https://github.com/bastienwirtz/homer/blob/main/public/assets/icons/README.md).
+See icons documentation [here](https://github.com/homer-dashboard/homer/blob/main/public/assets/icons/README.md).

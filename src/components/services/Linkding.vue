@@ -13,9 +13,6 @@ export default {
     Generic,
   },
   mixins: [service],
-  props: {
-    item: Object,
-  },
   data: () => ({
     bookmarks: [],
   }),
@@ -25,15 +22,8 @@ export default {
       return Math.min(Math.max(limit, 1), 15);
     },
   },
-  created() {
-    // Set up auto-update method for the scheduler
-    this.autoUpdateMethod = this.fetchBookmarks;
-
-    // Initial data fetch
-    this.fetchBookmarks();
-  },
   methods: {
-    fetchBookmarks: async function () {
+    fetchData: async function () {
       const headers = {
         Authorization: `Token ${this.item.token}`,
         Accept: "application/json",
@@ -54,12 +44,13 @@ export default {
             name: `${bookmark.title}`,
             subtitle: `${bookmark.description}`,
             url: bookmark.url,
+            target: this.item.target,
             logo: `${bookmark.favicon_url}`,
             tag: `${bookmark.tag_names.join(" #")}`,
           }));
         })
         .catch((e) => {
-          console.log(e);
+          console.error(e);
         });
     },
   },
