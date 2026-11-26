@@ -39,6 +39,7 @@ Available services are located in `src/components/`:
 - [Memos](#memos)
 - [Miniflux](#miniflux)
 - [Mylar](#mylar)
+- [Navidrome](#navidrome)
 - [NetAlertx](#netalertx)
 - [Nextcloud](#nextcloud)
 - [OctoPrint / Moonraker](#octoprintmoonraker)
@@ -529,6 +530,20 @@ Displays the number of unread articles from your Miniflux RSS reader.
 ```
 
 **API Key**: Generate an API key in Miniflux web interface under **Settings > API Keys > Create a new API key**
+
+## Navidrome
+
+Displays the number of tracks on a [Navidrome](https://www.navidrome.org/) server and when it last scanned them, with a `scanning` status while a scan runs.
+
+```yaml
+- name: "Navidrome"
+  type: "Navidrome"
+  logo: "assets/tools/sample.png"
+  url: https://my-navidrome.url
+  username: "<---your-username--->"
+  password: "<---your-password--->"
+  hide: [] # Optional: hides "tracks".
+```
 
 ## NetAlertx
 
