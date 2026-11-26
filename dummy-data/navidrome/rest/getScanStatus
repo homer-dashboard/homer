@@ -1,1 +1,17 @@
-{"subsonic-response":{"status":"ok","version":"1.16.1","type":"navidrome","serverVersion":"0.59.0 (cc3cca60)","openSubsonic":true,"scanStatus":{"scanning":false,"count":196936,"folderCount":16078,"lastScan":"2025-12-25T18:11:38.2156265+02:00","scanType":"quick","elapsedTime":386215626500}}}
+{
+  "subsonic-response": {
+    "status": "ok",
+    "version": "1.16.1",
+    "type": "navidrome",
+    "serverVersion": "0.64.2",
+    "openSubsonic": true,
+    "scanStatus": {
+      "scanning": false,
+      "count": 4523,
+      "folderCount": 412,
+      "lastScan": "2026-11-20T03:00:00Z",
+      "scanType": "quick",
+      "elapsedTime": 12500000000
+    }
+  }
+}

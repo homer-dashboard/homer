@@ -39,6 +39,7 @@ Available services are located in `src/components/`:
 - [Memos](#memos)
 - [Miniflux](#miniflux)
 - [Mylar](#mylar)
+- [Navidrome](#navidrome)
 - [NetAlertx](#netalertx)
 - [Nextcloud](#nextcloud)
 - [OctoPrint / Moonraker](#octoprintmoonraker)
@@ -532,15 +533,16 @@ Displays the number of unread articles from your Miniflux RSS reader.
 
 ## Navidrome
 
-Displays Navidrome status (online or offline), last sync datetime, numbers of music folders and artists.
+Displays the number of tracks on a [Navidrome](https://www.navidrome.org/) server and when it last scanned them, with a `scanning` status while a scan runs.
 
 ```yaml
-- name: Navidrome
-  type: Navidrome
-  logo: assets/tools/sample.png
-  url: https://my-service.url
-  username: <---insert-user-name-here--->
-  password: <---insert-password-here--->
+- name: "Navidrome"
+  type: "Navidrome"
+  logo: "assets/tools/sample.png"
+  url: https://my-navidrome.url
+  username: "<---your-username--->"
+  password: "<---your-password--->"
+  hide: [] # Optional: hides "tracks".
 ```
 
 ## NetAlertx
